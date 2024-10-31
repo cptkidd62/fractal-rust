@@ -1,13 +1,3 @@
-fn main() {
-    let mut img = Image::new(512, 256);
-    for i in 0..img.height {
-        if i < 1000000 {
-            img.set_color(i, i, (255, 0, 0));
-        }
-    }
-    img.write_to_ppm();
-}
-
 struct Image {
     width: u32,
     height: u32,
@@ -34,4 +24,14 @@ impl Image {
         }
         std::fs::write("test.ppm", &data).expect("Unable to write to file")
     }
+}
+
+fn main() {
+    let mut img = Image::new(512, 256);
+    for i in 0..img.height {
+        if i < 1000000 {
+            img.set_color(i, i, (255, 0, 0));
+        }
+    }
+    img.write_to_ppm();
 }
