@@ -14,8 +14,6 @@ struct Image {
     pixels: Vec<(u8, u8, u8)>,
 }
 
-use std::fs;
-
 impl Image {
     fn new(width: u32, height: u32) -> Self {
         Self {
