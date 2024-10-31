@@ -34,6 +34,6 @@ impl Image {
         for (r, g, b) in self.pixels.iter() {
             data.push_str(&format!("{r} {g} {b}\n"));
         }
-        fs::write("test.ppm", &data).expect("Unable to write to file")
+        std::fs::write("test.ppm", &data).expect("Unable to write to file")
     }
 }
