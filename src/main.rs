@@ -1,3 +1,5 @@
+use std::ops::{Add, Mul, Sub};
+
 struct Image {
     width: u32,
     height: u32,
@@ -23,6 +25,44 @@ impl Image {
             data.push_str(&format!("{r} {g} {b}\n"));
         }
         std::fs::write("test.ppm", &data).expect("Unable to write to file")
+    }
+}
+
+struct Complex {
+    real: f64,
+    imaginary: f64,
+}
+
+impl Add for Complex {
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Self {
+            real: self.real + rhs.real,
+            imaginary: self.imaginary + rhs.imaginary,
+        }
+    }
+}
+
+impl Sub for Complex {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self {
+            real: self.real - rhs.real,
+            imaginary: self.imaginary - rhs.imaginary,
+        }
+    }
+}
+
+impl Mul for Complex {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        Self {
+            real: self.real * rhs.real - self.imaginary * rhs.imaginary,
+            imaginary: self.real * rhs.imaginary + self.imaginary * rhs.real,
+        }
     }
 }
 
