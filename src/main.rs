@@ -1,9 +1,22 @@
 use std::ops::{Add, Mul, Sub};
 
+#[derive(Copy, Clone)]
+struct Color {
+    r: u8,
+    g: u8,
+    b: u8,
+}
+
+impl Color {
+    fn new(r: u8, g: u8, b: u8) -> Self {
+        Self { r, g, b }
+    }
+}
+
 struct Image {
     width: u32,
     height: u32,
-    pixels: Vec<(u8, u8, u8)>,
+    pixels: Vec<Color>,
 }
 
 impl Image {
@@ -11,17 +24,17 @@ impl Image {
         Self {
             width,
             height,
-            pixels: vec![(0, 0, 0); (width * height) as usize],
+            pixels: vec![Color::new(0, 0, 0); (width * height) as usize],
         }
     }
-    fn set_color(&mut self, x: u32, y: u32, color: (u8, u8, u8)) {
+    fn set_color(&mut self, x: u32, y: u32, color: Color) {
         self.pixels[(y * self.width + x) as usize] = color
     }
     fn write_to_ppm(&self) {
         let mut data = String::new();
         data.push_str("P3\n");
         data.push_str(&format!("{} {} 255\n", self.width, self.height));
-        for (r, g, b) in self.pixels.iter() {
+        for Color { r, g, b } in self.pixels.iter() {
             data.push_str(&format!("{r} {g} {b}\n"));
         }
         std::fs::write("test.ppm", &data).expect("Unable to write to file")
@@ -73,6 +86,33 @@ impl Mul for Complex {
     }
 }
 
+static COLOR_PALETTE1: [Color; 4] = [
+    Color {
+        r: 96,
+        g: 76,
+        b: 195,
+    },
+    Color {
+        r: 143,
+        g: 209,
+        b: 79,
+    },
+    Color {
+        r: 245,
+        g: 245,
+        b: 245,
+    },
+    Color {
+        r: 255,
+        g: 102,
+        b: 0,
+    },
+];
+
+fn get_color(n: usize) -> Color {
+    COLOR_PALETTE1[n % 4]
+}
+
 fn mandelbrot(img: &mut Image, max_iter: usize) {
     for i in 0..img.pixels.len() {
         let x = i as u32 % img.width;
@@ -82,10 +122,10 @@ fn mandelbrot(img: &mut Image, max_iter: usize) {
             (2.24 * y as f64 / img.height as f64) - 1.12,
         );
         let mut z = Complex::new(0., 0.);
-        img.set_color(x, y, (0, 0, 0));
+        img.set_color(x, y, Color::new(0, 0, 0));
         for n in 0..max_iter {
             if z.real * z.real + z.imaginary * z.imaginary > 4. {
-                img.set_color(x, y, (255, 255, 255));
+                img.set_color(x, y, get_color(n));
                 break;
             }
             z = z * z + c;
