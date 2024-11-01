@@ -109,8 +109,19 @@ static COLOR_PALETTE1: [Color; 4] = [
     },
 ];
 
-fn get_color(n: usize) -> Color {
-    COLOR_PALETTE1[n % 4]
+fn get_color(n: usize, z: Complex) -> Color {
+    let v = n as f64 + 1.
+        - (z.real * z.real + z.imaginary * z.imaginary)
+            .sqrt()
+            .log10()
+            .log2();
+    let col1 = COLOR_PALETTE1[v.floor() as usize % 4];
+    let col2 = COLOR_PALETTE1[v.ceil() as usize % 4];
+    Color::new(
+        col1.r + ((v - v.floor()) * (col2.r as f64 - col1.r as f64)) as u8,
+        col1.g + ((v - v.floor()) * (col2.g as f64 - col1.g as f64)) as u8,
+        col1.b + ((v - v.floor()) * (col2.b as f64 - col1.b as f64)) as u8,
+    )
 }
 
 fn mandelbrot(img: &mut Image, max_iter: usize) {
@@ -125,7 +136,7 @@ fn mandelbrot(img: &mut Image, max_iter: usize) {
         img.set_color(x, y, Color::new(0, 0, 0));
         for n in 0..max_iter {
             if z.real * z.real + z.imaginary * z.imaginary > 4. {
-                img.set_color(x, y, get_color(n));
+                img.set_color(x, y, get_color(n, z));
                 break;
             }
             z = z * z + c;
