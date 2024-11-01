@@ -124,7 +124,7 @@ fn get_color(n: usize, z: Complex) -> Color {
     )
 }
 
-fn mandelbrot(img: &mut Image, max_iter: usize) {
+fn mandelbrot(img: &mut Image, max_iter: usize, escape_value: f64) {
     for i in 0..img.pixels.len() {
         let x = i as u32 % img.width;
         let y = i as u32 / img.width;
@@ -135,7 +135,7 @@ fn mandelbrot(img: &mut Image, max_iter: usize) {
         let mut z = Complex::new(0., 0.);
         img.set_color(x, y, Color::new(0, 0, 0));
         for n in 0..max_iter {
-            if z.real * z.real + z.imaginary * z.imaginary > 4. {
+            if z.real * z.real + z.imaginary * z.imaginary > escape_value {
                 img.set_color(x, y, get_color(n, z));
                 break;
             }
@@ -146,6 +146,6 @@ fn mandelbrot(img: &mut Image, max_iter: usize) {
 
 fn main() {
     let mut img = Image::new(1920, 1080);
-    mandelbrot(&mut img, 100);
+    mandelbrot(&mut img, 100, 256.);
     img.write_to_ppm();
 }
