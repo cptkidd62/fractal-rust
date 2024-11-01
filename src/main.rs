@@ -28,9 +28,16 @@ impl Image {
     }
 }
 
+#[derive(Copy, Clone)]
 struct Complex {
     real: f64,
     imaginary: f64,
+}
+
+impl Complex {
+    fn new(real: f64, imaginary: f64) -> Self {
+        Self { real, imaginary }
+    }
 }
 
 impl Add for Complex {
@@ -66,12 +73,28 @@ impl Mul for Complex {
     }
 }
 
-fn main() {
-    let mut img = Image::new(512, 256);
-    for i in 0..img.height {
-        if i < 1000000 {
-            img.set_color(i, i, (255, 0, 0));
+fn mandelbrot(img: &mut Image, max_iter: usize) {
+    for i in 0..img.pixels.len() {
+        let x = i as u32 % img.width;
+        let y = i as u32 / img.width;
+        let c = Complex::new(
+            (2.5 * x as f64 / img.width as f64) - 2.,
+            (2.24 * y as f64 / img.height as f64) - 1.12,
+        );
+        let mut z = Complex::new(0., 0.);
+        img.set_color(x, y, (0, 0, 0));
+        for n in 0..max_iter {
+            if z.real * z.real + z.imaginary * z.imaginary > 4. {
+                img.set_color(x, y, (255, 255, 255));
+                break;
+            }
+            z = z * z + c;
         }
     }
+}
+
+fn main() {
+    let mut img = Image::new(512, 256);
+    mandelbrot(&mut img, 100);
     img.write_to_ppm();
 }
