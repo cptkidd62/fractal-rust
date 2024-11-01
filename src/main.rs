@@ -94,7 +94,7 @@ fn mandelbrot(img: &mut Image, max_iter: usize) {
 }
 
 fn main() {
-    let mut img = Image::new(512, 256);
+    let mut img = Image::new(1920, 1080);
     mandelbrot(&mut img, 100);
     img.write_to_ppm();
 }
