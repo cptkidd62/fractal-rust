@@ -179,4 +179,10 @@ mod tests {
         mandelbrot(&mut img, 0.02, -0.06, -0.56, 100, 256.);
         img.write_to_ppm("small2.ppm");
     }
+    #[test]
+    fn small3_case_ppm() {
+        let mut img = Image::new(2560, 1440);
+        mandelbrot(&mut img, 0.002, -0.06, -0.555, 100, 256.);
+        img.write_to_ppm("small3.ppm");
+    }
 }
