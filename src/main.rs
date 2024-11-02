@@ -118,9 +118,9 @@ fn get_color(n: usize, z: Complex) -> Color {
     let col1 = COLOR_PALETTE1[v.floor() as usize % 4];
     let col2 = COLOR_PALETTE1[v.ceil() as usize % 4];
     Color::new(
-        col1.r + ((v - v.floor()) * (col2.r as f64 - col1.r as f64)) as u8,
-        col1.g + ((v - v.floor()) * (col2.g as f64 - col1.g as f64)) as u8,
-        col1.b + ((v - v.floor()) * (col2.b as f64 - col1.b as f64)) as u8,
+        (col1.r as f64 + ((v - v.floor()) * (col2.r as f64 - col1.r as f64))) as u8,
+        (col1.g as f64 + ((v - v.floor()) * (col2.g as f64 - col1.g as f64))) as u8,
+        (col1.b as f64 + ((v - v.floor()) * (col2.b as f64 - col1.b as f64))) as u8,
     )
 }
 
