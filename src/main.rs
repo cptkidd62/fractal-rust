@@ -168,8 +168,8 @@ mod tests {
     }
     #[test]
     fn small1_case_ppm() {
-        let mut img = Image::new(1920, 1080);
-        mandelbrot(&mut img, 0.5, 0., 0., 100, 256.);
+        let mut img = Image::new(2560, 1440);
+        mandelbrot(&mut img, 0.00015, -1.075, 0.006, 100, 256.);
         img.write_to_ppm("small1.ppm");
     }
 }
