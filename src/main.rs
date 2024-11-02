@@ -51,6 +51,14 @@ impl Complex {
     fn new(real: f64, imaginary: f64) -> Self {
         Self { real, imaginary }
     }
+
+    fn abs(&self) -> f64 {
+        (self.real * self.real + self.imaginary * self.imaginary).sqrt()
+    }
+
+    fn abs2(&self) -> f64 {
+        self.real * self.real + self.imaginary * self.imaginary
+    }
 }
 
 impl Add for Complex {
@@ -110,12 +118,7 @@ static COLOR_PALETTE1: [Color; 4] = [
 ];
 
 fn get_color(n: usize, z: Complex) -> Color {
-    let v = (n as f64 + 1.
-        - (z.real * z.real + z.imaginary * z.imaginary)
-            .sqrt()
-            .log10()
-            .log2())
-    .ln_1p() * 3.;
+    let v = (n as f64 + 1. - z.abs().log10().log2()).ln_1p() * 3.;
     let col1 = COLOR_PALETTE1[v.floor() as usize % 4];
     let col2 = COLOR_PALETTE1[v.ceil() as usize % 4];
     Color::new(
@@ -143,7 +146,7 @@ fn mandelbrot(
         let mut z = Complex::new(0., 0.);
         img.set_color(x, y, Color::new(0, 0, 0));
         for n in 0..max_iter {
-            if z.real * z.real + z.imaginary * z.imaginary > escape_value {
+            if z.abs2() > escape_value {
                 img.set_color(x, y, get_color(n, z));
                 break;
             }
