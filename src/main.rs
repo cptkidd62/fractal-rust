@@ -124,13 +124,20 @@ fn get_color(n: usize, z: Complex) -> Color {
     )
 }
 
-fn mandelbrot(img: &mut Image, max_iter: usize, escape_value: f64) {
+fn mandelbrot(
+    img: &mut Image,
+    scale: f64,
+    off_x: f64,
+    off_y: f64,
+    max_iter: usize,
+    escape_value: f64,
+) {
     for i in 0..img.pixels.len() {
         let x = i as u32 % img.width;
         let y = i as u32 / img.width;
         let c = Complex::new(
-            (2.5 * x as f64 / img.width as f64) - 2.,
-            (2.24 * y as f64 / img.height as f64) - 1.12,
+            ((2.5 * x as f64 / img.width as f64) - 2.) * scale + off_x,
+            ((2.24 * y as f64 / img.height as f64) - 1.12) * scale + off_y,
         );
         let mut z = Complex::new(0., 0.);
         img.set_color(x, y, Color::new(0, 0, 0));
@@ -146,6 +153,6 @@ fn mandelbrot(img: &mut Image, max_iter: usize, escape_value: f64) {
 
 fn main() {
     let mut img = Image::new(1920, 1080);
-    mandelbrot(&mut img, 100, 256.);
+    mandelbrot(&mut img, 1., 0., 0., 100, 256.);
     img.write_to_ppm();
 }
