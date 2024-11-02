@@ -110,11 +110,12 @@ static COLOR_PALETTE1: [Color; 4] = [
 ];
 
 fn get_color(n: usize, z: Complex) -> Color {
-    let v = n as f64 + 1.
+    let v = (n as f64 + 1.
         - (z.real * z.real + z.imaginary * z.imaginary)
             .sqrt()
             .log10()
-            .log2();
+            .log2())
+    .ln_1p() * 3.;
     let col1 = COLOR_PALETTE1[v.floor() as usize % 4];
     let col2 = COLOR_PALETTE1[v.ceil() as usize % 4];
     Color::new(
@@ -169,7 +170,7 @@ mod tests {
     #[test]
     fn small1_case_ppm() {
         let mut img = Image::new(2560, 1440);
-        mandelbrot(&mut img, 0.00015, -1.075, 0.006, 100, 256.);
+        mandelbrot(&mut img, 0.00015, -1.0752, 0.006, 100, 256.);
         img.write_to_ppm("small1.ppm");
     }
 }
