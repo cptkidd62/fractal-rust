@@ -30,14 +30,14 @@ impl Image {
     fn set_color(&mut self, x: u32, y: u32, color: Color) {
         self.pixels[(y * self.width + x) as usize] = color
     }
-    fn write_to_ppm(&self) {
+    fn write_to_ppm(&self, fname: &str) {
         let mut data = String::new();
         data.push_str("P3\n");
         data.push_str(&format!("{} {} 255\n", self.width, self.height));
         for Color { r, g, b } in self.pixels.iter() {
             data.push_str(&format!("{r} {g} {b}\n"));
         }
-        std::fs::write("test.ppm", &data).expect("Unable to write to file")
+        std::fs::write(fname, &data).expect("Unable to write to file")
     }
 }
 
@@ -154,5 +154,16 @@ fn mandelbrot(
 fn main() {
     let mut img = Image::new(1920, 1080);
     mandelbrot(&mut img, 1., 0., 0., 100, 256.);
-    img.write_to_ppm();
+    img.write_to_ppm("test.ppm");
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn basic_case_ppm() {
+        let mut img = Image::new(1920, 1080);
+        mandelbrot(&mut img, 1., 0., 0., 100, 256.);
+        img.write_to_ppm("basic.ppm");
+    }
 }
