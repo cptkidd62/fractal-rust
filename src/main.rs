@@ -2,10 +2,23 @@ mod complex;
 mod fractal;
 mod image;
 
+use std::env;
+
 fn main() {
-    let mut img = image::Image::new(1920, 1080);
-    fractal::mandelbrot(&mut img, 1., 0., 0., 100, 256.);
-    img.write_to_ppm("test.ppm");
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 7 {
+        println!("Please provide the following arguments: FILENAME, WIDTH, HEIGHT, SCALE, X_AXIS_OFFSET, Y_AXIS_OFFSET")
+    } else {
+        let fname = args[1].as_str();
+        let width = args[2].parse::<u32>().unwrap();
+        let height = args[3].parse::<u32>().unwrap();
+        let scale = args[4].parse::<f64>().unwrap();
+        let off_x = args[5].parse::<f64>().unwrap();
+        let off_y = args[6].parse::<f64>().unwrap();
+        let mut img = image::Image::new(width, height);
+        fractal::mandelbrot(&mut img, scale, off_x, off_y, 100, 256.);
+        img.write_to_ppm(fname);
+    }
 }
 
 #[cfg(test)]
